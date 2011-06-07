@@ -1,68 +1,89 @@
 Bookkeeping - A simple couchapp to take care of your expenses
+====================================================================
 
-* Introduction
-  bookkeeping is a small couchapp that I wrote to visualise my
-  expenses for my small household. It allows you to enter expenses and
-  put them into freely defineable categories. A daily and a monthly
-  tab summarise what you have spend so far.
+Anglified version: Texts and variable names are now in English.
 
-  Thanks to tuftegraph you will see nice stacked graphs showing how
-  much money you spent each month to which category.
+Introduction
+------------
 
-* Prerequesites
-  As bookkeeping is a couchapp you will need the [[http://github.com/couchapp/couchapp][couchapp]] program
-  itself and also couchdb in a recent version. (I started with 0.10.x
-  so anything like this will work)
+bookkeeping is a small couchapp that I wrote to visualize my
+expenses for my small household. It allows you to enter expenses and
+put them into freely definable categories. A daily and a monthly
+tab summarize what you have spend so far.
 
-* Used software libraries
-  I am standing on shoulders of giants here. This little app includes:
-  - [[jqueryui.com][jqueryui]]
-  - [[http://github.com/xaviershay/tufte-graph][tufte-graph]] by Xavier Shay
+Thanks to tuftegraph you will see nice stacked graphs showing how
+much money you spent each month to which category.
 
-* Installation
-  This is pretty straight forward. As it is a couchapp like many others a simple 
-  chouchapp push . http://youruser:yourpass@localhost:5984/dbname
-  will do.
+Prerequisites
+-------------
 
-* Configuration
-  Bookkeeping has now replication support! Add a document with the id
-  'replicas' which has the following structure:
+As bookkeeping is a couchapp you will need the [couchapp](http://github.com/couchapp/couchapp) program
+itself and also couchdb in a recent version. (I started with 0.10.x
+so anything like this will work)
 
-  {
-   "_id": "replicas",
-   "_rev": "2-4e7f92128bd6b5e89431bd553c531b3c",
-   "hosts": [
-       "http://somehosttosyncwith:5894/bookkeeping",
-       "http://otherhost:5984/bookkeeping" ],
-   "type": "config"
-  }
+Used software libraries
+-----------------------
 
-  This causes your local couchdb to establish bidirektional
-  replication requests with each of the hosts.  If you don't want this
-  feature leave the host list empty.
-* Current flaws / Todo list
-  - No user authentication is currently enforced so everyone can edit anything!
-  - Just add categories as you go, the app will add them.
-  - No meta editing implemented such as renaming of categories. Use futon for now.
+I am standing on shoulders of giants here. This little app includes:
 
-* License
+- [jqueryui](jqueryui.com)
+- [tufte-graph](http://github.com/xaviershay/tufte-graph) by Xavier Shay
+
+Installation
+------------
+
+This is pretty straight forward. As it is a couchapp like many others a simple 
+
+	couchapp push . http://youruser:yourpass@localhost:5984/dbname
+
+will do.
+
+Configuration
+-------------
+
+Bookkeeping has now replication support! Add a document with the id
+'replicas' which has the following structure:
+
+	{
+	 "_id": "replicas",
+	 "_rev": "2-4e7f92128bd6b5e89431bd553c531b3c",
+	 "hosts": [
+	     "http://somehosttosyncwith:5894/bookkeeping",
+	     "http://otherhost:5984/bookkeeping" ],
+	 "type": "config"
+	}
+
+This causes your local couchdb to establish bidirectional
+replication requests with each of the hosts.  If you don't want this
+feature leave the host list empty.
+
+Current flaws / Todo list
+-------------------------
+
+- No user authentication is currently enforced so everyone can edit anything!
+- Just add categories as you go, the app will add them.
+- No meta editing implemented such as renaming of categories. Use futon for now.
+
+License
+-------
 
 Copyright (c) 2010, Christian Kellermann <ckeen@pestilenz.org>
+
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-      copyright notice, this list of conditions and the following
-      disclaimer in the documentation and/or other materials provided
-      with the distribution.
-    * Neither the name of the <ORGANIZATION> nor the names of its
-      contributors may be used to endorse or promote products derived
-      from this software without specific prior written permission.
+* Redistributions of source code must retain the above copyright
+  notice, this list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above
+  copyright notice, this list of conditions and the following
+  disclaimer in the documentation and/or other materials provided
+  with the distribution.
+* Neither the name of the <ORGANIZATION> nor the names of its
+  contributors may be used to endorse or promote products derived
+  from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT

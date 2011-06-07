@@ -27,15 +27,15 @@ function(newDoc, oldDoc, userCtx){
     if (! property) {throw({ forbidden : message}); }
   }
 
-  if (newDoc.type && newDoc.type == 'ausgabe'){
+  if (newDoc.type && newDoc.type == 'expense'){
     require("date");
-    require("betrag");
-    require("kommentar");
-    require("kategorie");
-  } else if (newDoc.type && newDoc.type == 'einnahme'){
+    require("amount");
+    require("comment");
+    require("category");
+  } else if (newDoc.type && newDoc.type == 'income'){
     require("date");
-    require("kommentar");
-    require("betrag");
-    require("kommentar");
+    require("comment");
+    require("amount");
+    require("comment");
   }
 }

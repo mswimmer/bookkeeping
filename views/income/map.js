@@ -1,7 +1,7 @@
 function(doc) {
-    if (doc.type && (doc.type == "einnahme")
-	&& doc.date && doc.kategorie){
-	emit([doc.date, doc.kategorie, doc._id], {betrag: doc.betrag, kommentar: doc.kommentar});
+    if (doc.type && (doc.type == "income")
+	&& doc.date && doc.category){
+	emit([doc.date, doc.category, doc._id], {amount: doc.amount, comment: doc.comment});
     }
 }
 

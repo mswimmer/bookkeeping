@@ -1,53 +1,53 @@
 
 <html>
   <head>
-    <title>Haushaltsbuch</title>
+    <title>House ledger</title>
     <link rel="stylesheet" href="style/ui-lightness/jquery-ui-1.7.2.custom.css" type="text/css">
     <link rel="stylesheet" href="style/main.css" type="text/css">
     <link rel="stylesheet" href="style/tufte-graph.css" type="text/css" media="screen" charset="utf-8" />
     </head>
   <body>
     <div id="loader" class="loading"></div>
-    <h1>Haushaltsbuch</h1>
+    <h1>House ledger</h1>
     <div id="tabs">
         <ul>
-		<li><a href="#tabs-1">Einnahmen</a></li>
-		<li><a href="#tabs-2">Tagesausgaben</a></li>
-		<li><a href="#tabs-3">Monatsausgaben</a></li>
+		<li><a href="#tabs-1">Income</a></li>
+		<li><a href="#tabs-2">Daily expenses</a></li>
+		<li><a href="#tabs-3">Monthly expenses</a></li>
 	</ul>
 
        <div id="tabs-1">
-          <p>&Uuml;bersicht f&uuml;r <input id="datum-monthly-income" type="text"></p>
-          <table id="incomes"></table>
-          <table id="incomes-sum"></table>
+          <p>Overview for <input id="date-monthly-income" type="text"></p>
+          <table id="income"></table>
+          <table id="income-total"></table>
           <div id="new-income"></div>
        </div>
        <div id="tabs-2">
-          <div id="prev-day" class="ui-icon ui-icon-circle-triangle-w">Vorheriger Tag</div>
-            &Uuml;bersicht f&uuml;r <input id="datum-daily-expense" type="text">
-            <div id="next-day" class="ui-icon ui-icon-circle-triangle-e">N&auml;chster Tag</div>
+          <div id="prev-day" class="ui-icon ui-icon-circle-triangle-w">Previous day</div>
+            Overview for <input id="date-daily-expense" type="text">
+            <div id="next-day" class="ui-icon ui-icon-circle-triangle-e">Next day</div>
           <table id="expenses"></table>
-          <div id="results"><table><tr id="sum_expenses"></tr><tr id="sum_income"></tr><tr id="saldo"></tr></table></div>
+          <div id="results"><table><tr id="total_expenses"></tr><tr id="total_income"></tr><tr id="balance"></tr></table></div>
           <div id="daily-expense"></div>
        </div>
        <div id="tabs-3">
-          <div id="prev-month" class="ui-icon ui-icon-circle-triangle-w">Vorheriger Monat</div>
-            &Uuml;bersicht f&uuml;r <input id="datum-monthly-expense" type="text">
-            <div id="next-month" class="ui-icon ui-icon-circle-triangle-e">N&auml;chster Monat</div>
+          <div id="prev-month" class="ui-icon ui-icon-circle-triangle-w">Previous month</div>
+            Overview for <input id="date-monthly-expense" type="text">
+            <div id="next-month" class="ui-icon ui-icon-circle-triangle-e">Next month</div>
           <div id="monthly-view">
              <table id="month"></table>
-             <table><tr id="sum_expenses"></tr><tr id="sum_income"></tr><tr id="monthly_saldo"></tr></table>
+             <table><tr id="total_expenses"></tr><tr id="total_income"></tr><tr id="monthly_balance"></tr></table>
              <div id="monthly-expense"></div>
           </div>
        </div>
     </div>
     <div class='graph-header'>
-    <h3 align="left">Jahres&uuml;bersicht</h3>
-    <p align="left">Angezeigt wird das laufende Jahr, Betr&auml;ge in Euro</p>
+    <h3 align="left">Yearly report</h3>
+    <p align="left">The current year is shown with amounts in EUROs</p>
     </div>
     <div id='stacked-graph' class="graph" class="loading" style="width: 1080px; height: 400px;"></div>
-   <div id ="dialog-confirm" title="Eintrag wirklich l&ouml;schen?"><p id="dialog-confirm-text"></p></div>
-   <small><p class="copyright">(C) 2010 by Christian Kellermann, the code for <a href="http://github.com/ckeen/bookkeeping">this</a> couchapp is available under the <a href="http://www.opensource.org/licenses/bsd-license.php">BSD license</a></p></small>
+   <div id ="dialog-confirm" title="Do you really want to delete this entry?"><p id="dialog-confirm-text"></p></div>
+   <small><p class="copyright">(C) 2010 by Christian Kellermann, adapted by Morton Swimmer, this version of <a href="git://github.com/SifuMoraga/bookkeeping.git">this</a> couchapp is available under the <a href="http://www.opensource.org/licenses/bsd-license.php">BSD license</a></p></small>
    </body>
   <script src="/_utils/script/json2.js"></script>
   <script src="/_utils/script/jquery.js"></script>

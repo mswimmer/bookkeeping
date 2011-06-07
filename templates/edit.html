@@ -1,21 +1,21 @@
 <head>
-  <title>Einen Eintrag &Auml;ndern</title>
+  <title>Change an entry</title>
 </head>
 <body>
   <form id="new-expense" method="post">
-    <h1>Neue Ausgabe eintragen f&uuml;r </h1>
-    <p><label>Kommentar</label><input type="text" size="100" name="kommentar" id="kommentar"></p>
-    <p><label>Betrag</label><input type="text" size="10" name="betrag" id="betrag"></p>
-    <p><label>Art der Ausgabe</label><input type="text" size="20" name="kategorie" id="kategorie"></p>
+    <h1>Add an entry for </h1>
+    <p><label>Comment</label><input type="text" size="100" name="comment" id="comment"></p>
+    <p><label>Amount</label><input type="text" size="10" name="amount" id="amount"></p>
+    <p><label>Type of expense</label><input type="text" size="20" name="category" id="category"></p>
     <p>
-      <input type="radio" name="type" value="einnahme">Einnahme<br>
-      <input type="radio" name="type" value="ausgabe" checked="checked">Ausgabe<br>
+      <input type="radio" name="type" value="income">Income<br>
+      <input type="radio" name="type" value="expense" checked="checked">Expense<br>
     </p>
 
-    <p><input type="submit" value="&Uuml;bernehmen &rarr;"></p>
+    <p><input type="submit" value="Accept &rarr;"></p>
   </form>
   <p id="result"></p>
-  <input type="button" value="Zum Index &rarr;" id="back">
+  <input type="button" value="Index &rarr;" id="back">
 </body>
   <script src="/_utils/script/json2.js"></script>
   <script src="/_utils/script/jquery.js?1.2.6"></script>
@@ -32,13 +32,13 @@
     var date = [ d.getFullYear(), d.getMonth() + 1, d.getDate() ];
     var editfrom = app.docForm("form#new-expense", {
       id: <%= docid %>,
-      fields : [ "kommentar", "betrag", "kategorie", "type" ],
-      template : { "date" : date, "betrag" : 0, "type" : "ausgabe" },
+      fields : [ "comment", "amount", "category", "type" ],
+      template : { "date" : date, "amount" : 0, "type" : "expense" },
       beforeSave  : function(doc) {
-        var b = Number(doc.betrag);
-        if (b == "NaN") throw ({error : "Betrag ist keine Zahl"})
-        else doc.betrag = b;
-        doc.kategorie = doc.kategorie.toLowerCase();
+        var b = Number(doc.amount);
+        if (b == "NaN") throw ({error : "The amount is not a number"})
+        else doc.amount = b;
+        doc.category = doc.category.toLowerCase();
       },
       success : function( response ) {
         $("#result").text("Success");

@@ -1,7 +1,6 @@
 function(doc){
-    if (doc.type && (doc.type == "ausgabe")
-	&& doc.kategorie && doc.betrag){
-      emit(doc.kategorie, doc.betrag);
+    if (doc.type && (doc.type == "expense") && doc.category && doc.amount) {
+      emit(doc.category, doc.amount);
    }
 }
 

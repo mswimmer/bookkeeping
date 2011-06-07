@@ -2,7 +2,7 @@ $.couch.app(function(app) {
         var dbname = document.location.href.split('/')[3];
         var design = unescape(document.location.href).split('/')[5];
         var DB = $.couch.db(dbname);
-        var Monate = ["Januar", "Februar", "M&auml;rz", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
+        var Months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         var today = new Date();
         var load_ref = 0;
 
@@ -35,80 +35,80 @@ $.couch.app(function(app) {
             var form = '<form id="'+ form_id + '">' +
                 '<h2>'+ title + " - " + $(date).val() + '</h2>' +
                 '<table>'+
-                '<tr><td><input type="text" size="15" name="kategorie" id="kategorie"></td>' +
+                '<tr><td><input type="text" size="15" name="category" id="category"></td>' +
 
-                '<td><input type="text" size="10" name="betrag" id="betrag"></td>' +
-                '<td><input type="text" size="50" name="kommentar" id="kommentar"></td>' +
-                '<td><input type="button" value="Abbrechen" id="abbruch-form'+ form_id +'"></td>' +
-                '<td><input type="submit" value="&Uuml;bernehmen &rarr;"></td></tr>' +
-                '<tr><th>Kategorie</th><th>Betrag</th><th>Kommentar</th></tr></table>' +
+                '<td><input type="text" size="10" name="amount" id="amount"></td>' +
+                '<td><input type="text" size="50" name="comment" id="comment"></td>' +
+                '<td><input type="button" value="Cancel" id="cancel-form'+ form_id +'"></td>' +
+                '<td><input type="submit" value="Accept &rarr;"></td></tr>' +
+                '<tr><th>Category</th><th>Amount</th><th>Comment</th></tr></table>' +
                 '</form>';
             load();
             $('#' + form_id ).html(form);
-            getCategories("#kategorie");
+            getCategories("#category");
 
             var docdate = $( date ).val().split("-").map(function(e){return Number(e);});
             var editfrom = app.docForm('form#' + form_id , {
-                    fields : [ "kommentar", "betrag", "kategorie", "type" ],
-                    template : { "date" : docdate, "betrag" : 0, "type" : kind, "kommentar" : "" },
+                    fields : [ "comment", "amount", "category", "type" ],
+                    template : { "date" : docdate, "amount" : 0, "type" : kind, "comment" : "" },
                     beforeSave  : function(doc) {
-                        var b = Number(doc.betrag);
-                        if (b == "NaN") {throw ({error : "Betrag ist keine Zahl"});}
-                        else {doc.betrag = b;}
-                        doc.kategorie = doc.kategorie.toLowerCase();
+                        var b = Number(doc.amount);
+                        if (b == "NaN") {throw ({error : "The amount is not a number"});}
+                        else {doc.amount = b;}
+                        doc.category = doc.category.toLowerCase();
                         load();
                     },
                     success : function( response ){ success( response ); }
                 });
-            $('#abbruch-form' + form_id ).live('click', function(){ cancel(); });
+            $('#cancel-form' + form_id ).live('click', function(){ cancel(); });
         }
 
         function addExpense( e ) {
-            addEntry("Neue Ausgabe", e.attr("id"), "ausgabe","#datum-" + e.attr("id"),
+            addEntry("New expense", e.attr("id"), "expense","#date-" + e.attr("id"),
                      function(response) {
                          ready();
                          e.text('');
-                         render_day("datum-" + e.attr("id"), $("#datum-" + e.attr("id")).val().split("-"));
-                         render_month("datum-" + e.attr("id"), $("#datum-" + e.attr("id")).val().split("-"));
+                         render_day("date-" + e.attr("id"), $("#date-" + e.attr("id")).val().split("-"));
+                         render_month("date-" + e.attr("id"), $("#date-" + e.attr("id")).val().split("-"));
                          graph_monthly_expenses([today.getFullYear(), today.getMonth() + 1, today.getDate()]);
                      },
                      function() {
                          e.text('');
-                         render_day("datum-" + e.attr("id"),$("#datum-" + e.attr("id")).val().split("-"));
+                         render_day("date-" + e.attr("id"),$("#date-" + e.attr("id")).val().split("-"));
                      });
         }
 
         function addIncome() {
-            addEntry("Neue Einnahme", "new-income", "einnahme", "#datum-monthly-income",
+            addEntry("New income entry", "new-income", "income", "#date-monthly-income",
                      function(response) {
                          ready();
                          $("#new-income").text('');
-                         render_month("datum-monthly-income", $("#datum-monthly-income").val().split("-"));
+                         render_month("date-monthly-income", $("#date-monthly-income").val().split("-"));
                          graph_monthly_expenses([today.getFullYear(), today.getMonth() + 1, today.getDate()]);
                      },
                      function() {
                          $("#new-income").text('');
-                         render_day("datum-monthly-income", $("#datum-monthly-income").val().split("-"));
+                         render_day("date-monthly-income", $("#date-monthly-income").val().split("-"));
                      });
         }
 
         function editEntry(id, kind){
 
             var value = 0;
-            var kommentar = "";
+            var comment = "";
             var date = [ ];
 
             date = $("#" + id + "-date").text().slice(0).split("-");
             value = $("#" + id + "-value").text().slice(0);
-            kommentar = $("#" + id + "-comment").text().slice(0);
+            comment = $("#" + id + "-comment").text().slice(0);
 
-            $("#"+ id + "-comment").html('<form id="' + kind + '-' + id +'" method="post"><input type="text" size="15" id="kommentar-' + id + '" value="' + kommentar +'">');
-            $("#"+ id + "-value").html('<input type="text" size="15" id="betrag-' + id +'" value="' + value + '">');
+            $("#"+ id + "-comment").html('<form id="' + kind + '-' + id +'" method="post"><input type="text" size="15" id="comment-' + id + '" value="' + comment +'">');
+            $("#"+ id + "-value").html('<input type="text" size="15" id="amount-' + id +'" value="' + value + '">');
             $("#edit-" + kind+ "-" + id).html('<span id="submit-' + id + '" class="ui-icon ui-icon-circle-check"></form>');
             $("#cancel-" + kind + "-" + id).html('<span class="ui-icon ui-icon-circle-close"></span>');
             $("#edit-"+ kind + "-" + id).click( function() { $("form#" + kind + "-" + id).submit(); });
             $("#cancel-" + kind + "-" + id).click( function() {
-                    $("#" + id + "-comment").text(kommentar);
+                    $("#" + id + "-comment").text(comment);
                     $("#" + id + "-value").text(Number(value).toFixed(2));
                     $("#cancel-" + kind + "-" + id).text("");
                     $("#edit-" + kind+ "-" + id).html('<span class="ui-icon ui-icon-pencil"></span>');
@@ -120,32 +120,32 @@ $.couch.app(function(app) {
                     fields : [],
                     template : { "date" : date, "type" : kind },
                     beforeSave  : function(doc) {
-                        var b = Number($("#betrag-" + id).val());
+                        var b = Number($("#amount-" + id).val());
                         if (b == "NaN") {throw ({error : "Betrag ist keine Zahl"});}
-                        else {doc.betrag = b;}
-                        doc.kommentar = $("#kommentar-" + id).val();
-                        doc.kategorie = doc.kategorie.toLowerCase();
+                        else {doc.amount = b;}
+                        doc.comment = $("#comment-" + id).val();
+                        doc.category = doc.category.toLowerCase();
                         load();
                     },
                     success : function( response ) {
                         ready();
                         if (kind == "expense"){
-                            render_day($("datum-daily", "#datum-daily-" + kind).val().split("-"));
+                            render_day($("date-daily", "#date-daily-" + kind).val().split("-"));
                         }
-                        render_month("datum-monthly", $("#datum-monthly-" + kind).val().split("-"));
+                        render_month("date-monthly", $("#date-monthly-" + kind).val().split("-"));
                     }
                 });
         }
 
         function deleteEntry( id ){
-            $("#dialog-confirm-text").html("</center>Eintrag vom <br/>" + $("#"+id+"-date").text() +"<br/>" +
-                                           $("#"+ id + "-comment").text() +"<br/>wirklich l&ouml;schen?</center>");
+            $("#dialog-confirm-text").html("</center>Do you really want to delete the entry of <br/>" + $("#"+id+"-date").text() +"<br/>" +
+                                           $("#"+ id + "-comment").text() +"<br/>?</center>");
             $("#dialog-confirm").dialog({
                     resizable: false,
                         height:240,
                         modal: true,
                         buttons: {
-                        'Ja, weg damit!': function() {
+                        'Delete it!': function() {
                             load();
                             $.ajax({ url : "/" + dbname + "/" + id,
                                         data : "",
@@ -161,7 +161,7 @@ $.couch.app(function(app) {
 
                             $(this).dialog('close');
                         },
-                            'NEIN': function() {
+                            'No': function() {
                             $(this).dialog('close');
                         }
                     }
@@ -169,24 +169,24 @@ $.couch.app(function(app) {
 
         }
 
-        function render_incomes(startdate, enddate, e, s){
+        function render_income(startdate, enddate, e, s){
             var header_rows = [];
             var data_rows = [];
-            var sum_income = 0;
+            var total_income = 0;
             var res = {};
             var toggle = 1;
 
             load();
             $( e ).fadeOut( 500 );
             s.fadeOut( 500 );
-            DB.view(design+"/einnahmen?startkey=[[" + startdate.join(",") + "],\"\"];endkey=[[" + enddate.join(",") + "],\"\"]",{success: function(json) {
+            DB.view(design+"/income?startkey=[[" + startdate.join(",") + "],\"\"];endkey=[[" + enddate.join(",") + "],\"\"]",{success: function(json) {
                         data_rows = json.rows.map(function(row) {
                                 r = [];
                                 k = [];
                                 id = row.key[2];
-                                r.push('<td class="value"><div id="' + id + '-value">' + row.value.betrag.toFixed(2) + '</div></td>');
-                                k.push(row.value.kommentar);
-                                sum_income = sum_income + row.value.betrag;
+                                r.push('<td class="value"><div id="' + id + '-value">' + row.value.amount.toFixed(2) + '</div></td>');
+                                k.push(row.value.comment);
+                                total_income = total_income + row.value.amount;
                                 toggle = toggle ? 0 : 1;
                                 return '<tr class="row' + toggle +'" id="row-' + id +'"><td id="'+ id + '-date">' +
                                 row.key[0].join('-') + '</td><td><div id="' + id + '-comment">' +
@@ -199,8 +199,8 @@ $.couch.app(function(app) {
                         ready();
                         $( e ).html( header_rows + data_rows.join('') + '<td colspan="4"><hr></td>' +
                                      '<td><div id="new-income-dialog" rel="edit-new-income"><span class="ui-icon ui-icon-circle-plus"></span></div></td>');
-                        s.html( '<tr><td>Summe Einkommen</td><td>' +
-                                '<td class="value">' + sum_income.toFixed(2) + '</td></tr>');
+                        s.html( '<tr><td>Total income</td><td>' +
+                                '<td class="value">' + total_income.toFixed(2) + '</td></tr>');
                         $( e ).fadeIn( 100 );
                         s.fadeIn( 100 );
                     }});
@@ -210,7 +210,7 @@ $.couch.app(function(app) {
             var header_rows = [];
             var data_rows = [];
             var categories = [];
-            var sum_expenses = 0;
+            var total_expenses = 0;
             var res = {};
             var toggle = 1;
 
@@ -221,14 +221,14 @@ $.couch.app(function(app) {
             DB.view(design+"/available_categories?group=true",
                     {success: function(json) {
 
-                            categories = json.rows.map(function(c) { return {name : c.key , summe : 0};});
-                            categories.Kommentar = 0;
-                            header_rows = '<tr id="header-row"><th></th>' + '<th>Kommentar</th>' + categories.map(function(e) {
+                            categories = json.rows.map(function(c) { return {name : c.key , total : 0};});
+                            categories.Comment = 0; // TODO: capital C???
+                            header_rows = '<tr id="header-row"><th></th>' + '<th>Comment</th>' + categories.map(function(e) {
                                     return '<th>' + e.name + '</th>';}).join(' ') +
                                 '<td><div id="' + dialog_id + '" rel="edit-new-expense"><span class="ui-icon ui-icon-circle-plus"></span></div></td>' + '</tr>';
 
 
-                            DB.view(design+"/ausgaben?startkey=[[" + startdate.join(",") + "]];endkey=[[" + enddate.join(",") + "]]",
+                            DB.view(design+"/expenses?startkey=[[" + startdate.join(",") + "]];endkey=[[" + enddate.join(",") + "]]",
                                     {success: function(json) {
                                             data_rows = json.rows.map(function(row) {
                                                     r = [];
@@ -236,9 +236,9 @@ $.couch.app(function(app) {
                                                     id = row.key[2];
                                                     categories.forEach(function(c) {
                                                             if (row.key[1] == c.name){
-                                                                r.push('<td class="value"><div id="' + id + '-value">' + row.value.betrag.toFixed(2) + '</div></td>');
-                                                                k.push(row.value.kommentar);
-                                                                c.summe += row.value.betrag;
+                                                                r.push('<td class="value"><div id="' + id + '-value">' + row.value.amount.toFixed(2) + '</div></td>');
+                                                                k.push(row.value.comment);
+                                                                c.total += row.value.amount;
                                                             } else {
                                                                 r.push('<td></td>');
                                                             }
@@ -251,18 +251,18 @@ $.couch.app(function(app) {
                                                     '<td><div id="cancel-expense-' + id + '"></div></td>' +
                                                     '<td><div id="delete-' + id + '"><span class="ui-icon ui-icon-trash"></div></td></tr>';
                                                 });
-                                            sums = '<tr><td>Summe d. Einzelposten</td><td>' +
+                                            sums = '<tr><td>Total of entries</td><td>' +
                                                 categories.map( function (c) {
-                                                        if (c.summe > 0) {
-                                                            sum_expenses = sum_expenses + c.summe;
-                                                            return '<td class="value">' + c.summe.toFixed(2) + '</td>';
+                                                        if (c.total > 0) {
+                                                            total_expenses = total_expenses + c.total;
+                                                            return '<td class="value">' + c.total.toFixed(2) + '</td>';
                                                         } else {
                                                             return '<td></td>';
                                                         }}).join('') + '</tr>';
 
                                             ready();
                                             $( e ).html( header_rows + data_rows.join('') + ((data_rows.length > 30)? header_rows : "") + sums);
-                                            s.html('<tr><td>Summe Ausgaben</td><td class="value">' + sum_expenses.toFixed(2) + '</td></tr>');
+                                            s.html('<tr><td>Total expenses</td><td class="value">' + total_expenses.toFixed(2) + '</td></tr>');
                                             $( e ).fadeIn( 100 );
                                             s.fadeIn( 100 );
                                         }});
@@ -274,7 +274,7 @@ $.couch.app(function(app) {
             var date2 = date.map(function(e){return Number(e);}).slice(0);
             var months = [ 31,28,31,30,31,30,31,31,30,31,30,31,30,31];
             date2[2] = date2[2]+1;
-            var res = render_expenses( date1, date2, "#expenses", $("#saldo"), "new-daily-expense-dialog" );
+            var res = render_expenses( date1, date2, "#expenses", $("#balance"), "new-daily-expense-dialog" );
             $('#next-day').unbind();
             $('#next-day' ).bind( 'click',
                                   function(event){
@@ -322,8 +322,8 @@ $.couch.app(function(app) {
             var date2 = date.map(function(e){return Number(e);}).slice(0);
             date1[2] = 1;
             date2[2] = 32;
-            render_incomes( date1, date2, "#incomes", $("#incomes-sum") );
-            var res = render_expenses( date1, date2, "#month", $("#monthly_saldo"), "new-monthly-expense-dialog" );
+            render_income( date1, date2, "#income", $("#income-total") );
+            var res = render_expenses( date1, date2, "#month", $("#monthly_balance"), "new-monthly-expense-dialog" );
             $('#next-month').unbind();
             $('#next-month' ).bind( 'click',
                                     function(event){
@@ -354,8 +354,8 @@ $.couch.app(function(app) {
                                     });
 
         }
-        render_month("datum-monthly-expense", [today.getFullYear(), today.getMonth() + 1, today.getDate()]);
-        render_day("datum-daily-expense", [today.getFullYear(), today.getMonth() + 1, today.getDate()]);
+        render_month("date-monthly-expense", [today.getFullYear(), today.getMonth() + 1, today.getDate()]);
+        render_day("date-daily-expense", [today.getFullYear(), today.getMonth() + 1, today.getDate()]);
 
         $("#new-daily-expense-dialog").live('click', function(e){ addExpense( $("#daily-expense") ); });
         $("#new-monthly-expense-dialog").live('click', function(e){ addExpense( $("#monthly-expense") ); });
@@ -373,15 +373,15 @@ $.couch.app(function(app) {
             });
 
 
-        $("#datum-monthly-income").val([today.getFullYear(), today.getMonth() + 1, today.getDate()].join("-"));
-        $('#datum-monthly-income').datepicker('option',$.extend({showMonthAfterYear: false}, $.datepicker.regional.de));
-        $("#datum-monthly-income").datepicker({dateFormat : "yy-mm-dd", onSelect : function(dateText, inst){ render_month(this.getAttribute("id"), dateText.split("-"));}});
-        $("#datum-daily-expense").val([today.getFullYear(), today.getMonth() + 1, today.getDate()].join("-"));
-        $('#datum-daily-expense').datepicker('option',$.extend({showMonthAfterYear: false}, $.datepicker.regional.de));
-        $("#datum-daily-expense").datepicker({dateFormat : "yy-mm-dd", onSelect : function(dateText, inst){render_day(this.getAttribute("id"),dateText.split("-"));}});
-        $("#datum-monthly-expense").val([today.getFullYear(), today.getMonth() + 1, today.getDate()].join("-"));
-        $('#datum-monthly-expense').datepicker('option',$.extend({showMonthAfterYear: false}, $.datepicker.regional.de));
-        $("#datum-monthly-expense").datepicker({dateFormat : "yy-mm", onSelect : function(dateText, inst){dateText += "-1"; render_month(this.getAttribute("id"), dateText.split("-"));}});
+        $("#date-monthly-income").val([today.getFullYear(), today.getMonth() + 1, today.getDate()].join("-"));
+        $('#date-monthly-income').datepicker('option',$.extend({showMonthAfterYear: false}, $.datepicker.regional.de)); // TODO: regional.de???
+        $("#date-monthly-income").datepicker({dateFormat : "yy-mm-dd", onSelect : function(dateText, inst){ render_month(this.getAttribute("id"), dateText.split("-"));}});
+        $("#date-daily-expense").val([today.getFullYear(), today.getMonth() + 1, today.getDate()].join("-"));
+        $('#date-daily-expense').datepicker('option',$.extend({showMonthAfterYear: false}, $.datepicker.regional.de));
+        $("#date-daily-expense").datepicker({dateFormat : "yy-mm-dd", onSelect : function(dateText, inst){render_day(this.getAttribute("id"),dateText.split("-"));}});
+        $("#date-monthly-expense").val([today.getFullYear(), today.getMonth() + 1, today.getDate()].join("-"));
+        $('#date-monthly-expense').datepicker('option',$.extend({showMonthAfterYear: false}, $.datepicker.regional.de));
+        $("#date-monthly-expense").datepicker({dateFormat : "yy-mm", onSelect : function(dateText, inst){dateText += "-1"; render_month(this.getAttribute("id"), dateText.split("-"));}});
 
 
         function graph_monthly_expenses( date ){
@@ -406,7 +406,7 @@ $.couch.app(function(app) {
                                                             month_row.push ( months[i][categories[j]] );
                                                         }
                                                     }
-                                                    year.push([ month_row, { label : Monate[i-1]} ]);
+                                                    year.push([ month_row, { label : Months[i-1]} ]);
                                                 }
                                             }
                                             jQuery('#stacked-graph').tufteBar({
